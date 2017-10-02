@@ -5,6 +5,7 @@
     "strict": true
   },
   "files": [
-    "getTypes.ts"
+    "getTypes.ts",
+    "createImports.ts"
   ]
 }
