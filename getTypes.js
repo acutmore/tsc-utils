@@ -11,10 +11,10 @@ function getTypes(sourceFile, cb) {
     processNode(sourceFile);
     function processNode(node) {
         if (ts.isTypeReferenceNode(node)) {
-            const type = node.typeName.getFullText(sourceFile).trim();
+            const type = node.typeName.getFullText(sourceFile).trim().split('.')[0];
             if (!set.has(type)) {
                 set.add(type);
-                cb(node.typeName.getFullText(sourceFile).trim());
+                cb(type);
             }
         }
         ts.forEachChild(node, processNode);

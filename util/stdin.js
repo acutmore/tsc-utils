@@ -1,26 +1,29 @@
 "use strict";
 /// <reference types="node" />
 Object.defineProperty(exports, "__esModule", { value: true });
-function getStdIn() {
+function consume(stream) {
     const ret = [];
-    const stdin = process.stdin;
     let len = 0;
     return new Promise(resolve => {
-        if (stdin.isTTY) {
+        if (stream.isTTY) {
             resolve('');
         }
         else {
-            stdin.on('readable', () => {
+            stream.on('readable', () => {
                 let chunk;
-                while ((chunk = stdin.read())) {
+                while ((chunk = stream.read())) {
                     ret.push(chunk);
                     len += chunk.length;
                 }
             });
-            stdin.on('end', () => {
+            stream.on('end', () => {
                 resolve(Buffer.concat(ret, len).toString('utf8'));
             });
         }
     });
+}
+exports.consume = consume;
+function getStdIn() {
+    return consume(process.stdin);
 }
 exports.getStdIn = getStdIn;

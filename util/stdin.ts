@@ -1,26 +1,29 @@
 /// <reference types="node" />
 
-export function getStdIn(): Promise<string> {
+export function consume(stream: NodeJS.ReadStream): Promise<string> {
     const ret: Buffer[] = [];
-    const stdin = process.stdin;
 	let len = 0;
 
 	return new Promise<string>(resolve => {
-		if (stdin.isTTY) {
+		if (stream.isTTY) {
 			resolve('');
 		} else {
-            stdin.on('readable', () => {
+            stream.on('readable', () => {
                 let chunk: Buffer;
 
-                while ((chunk = stdin.read() as Buffer)) {
+                while ((chunk = stream.read() as Buffer)) {
                     ret.push(chunk);
                     len += chunk.length;
                 }
             });
 
-            stdin.on('end', () => {
+            stream.on('end', () => {
                 resolve(Buffer.concat(ret, len).toString('utf8'));
             });
         }
 	});
+}
+
+export function getStdIn(): Promise<string> {
+    return consume(process.stdin);
 }
