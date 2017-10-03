@@ -13,10 +13,18 @@ function run(t, input, types) {
     return assertion;
 }
 
-t.test('when item is not found', function (t) {
+t.test('variable declaration type', function (t) {
     return run(t, `
         declare const stream: Rx.Observable;
     `, ['Rx']
+    )
+    .then(t.end);
+});
+
+t.test('class declaration', function (t) {
+    return run(t, `
+        class Foo extends Bar implements Car, Zar {};
+    `, ['Bar', 'Car', 'Zar']
     )
     .then(t.end);
 });

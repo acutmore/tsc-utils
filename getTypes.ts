@@ -10,13 +10,20 @@ function getTypes(sourceFile: ts.SourceFile, cb: (t: string) => void) {
     const set = new Set<string>();
     processNode(sourceFile);
 
+    function processType(s: string) {
+        const type = s.trim().split('.')[0];
+        if (! set.has(type)) {
+            set.add(type);
+            cb(type);
+        } 
+    }
+
     function processNode(node: ts.Node) {
         if (ts.isTypeReferenceNode(node)) {
-            const type = node.typeName.getFullText(sourceFile).trim().split('.')[0];
-            if (! set.has(type)) {
-                set.add(type);
-                cb(type);
-            }
+            processType(node.typeName.getFullText(sourceFile));
+        }
+        if (ts.isExpressionWithTypeArguments(node)) {
+            processType(node.getFullText(sourceFile));
         }
         ts.forEachChild(node, processNode);
     }

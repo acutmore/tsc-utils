@@ -9,13 +9,19 @@ const stdin_1 = require("./util/stdin");
 function getTypes(sourceFile, cb) {
     const set = new Set();
     processNode(sourceFile);
+    function processType(s) {
+        const type = s.trim().split('.')[0];
+        if (!set.has(type)) {
+            set.add(type);
+            cb(type);
+        }
+    }
     function processNode(node) {
         if (ts.isTypeReferenceNode(node)) {
-            const type = node.typeName.getFullText(sourceFile).trim().split('.')[0];
-            if (!set.has(type)) {
-                set.add(type);
-                cb(type);
-            }
+            processType(node.typeName.getFullText(sourceFile));
+        }
+        if (ts.isExpressionWithTypeArguments(node)) {
+            processType(node.getFullText(sourceFile));
         }
         ts.forEachChild(node, processNode);
     }
