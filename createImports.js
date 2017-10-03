@@ -9,13 +9,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /// <reference types="node" />
 const Path = require("path");
 const ReadLine = require("readline");
-const filePath = Path.dirname(Path.resolve(process.cwd(), process.argv[2]));
-const typeLocationsPath = process.argv[3];
+const filePath = Path.dirname(Path.resolve(process.cwd(), process.argv[3]));
+const typeLocationsPath = Path.resolve(process.cwd(), process.argv[2]);
 const typeLocationsDir = Path.dirname(typeLocationsPath);
 const typeLocations = require(typeLocationsPath);
 Object.keys(typeLocations).forEach(key => {
     const typeLocation = typeLocations[key];
-    const fullPath = Path.resolve(typeLocation, typeLocationsDir);
+    const fullPath = Path.resolve(typeLocationsDir, typeLocation);
     typeLocations[key] = fullPath;
 });
 function resolve(type) {
@@ -24,7 +24,7 @@ function resolve(type) {
         return undefined;
     }
     const relativePath = Path.relative(filePath, location);
-    return `import ${type} from ${relativePath}`;
+    return `import ${type} from './${relativePath.replace('.d.ts', '')}'`;
 }
 const rl = ReadLine.createInterface({
     input: process.stdin,
