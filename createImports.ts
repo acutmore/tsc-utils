@@ -31,7 +31,7 @@ function resolve(type: string): string | undefined {
   if (relativePath[0] != '.') {
     relativePath = './' + relativePath;
   }
-  return `import ${type} from '${relativePath.replace('.d.ts', '')}'`;
+  return `import ${type} from '${relativePath.replace('.d.ts', '')}';`;
 }
 
 const rl = ReadLine.createInterface({
