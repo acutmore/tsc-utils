@@ -29,8 +29,8 @@ Generates import statements that will have the correct path for a given output f
 
 ## example composition
 
-Get the required import statements for a given file $src
+Add the required import statements to a given file `$src`
 
 ```bash
-> node getTypes.js $src | node createImports.js ./lookup.json $src
+> echo "$(node getTypes.js $src | node createImports.js ./lookup.json $src)\n$(cat $src)" 
 ```
