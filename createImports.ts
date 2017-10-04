@@ -27,8 +27,11 @@ function resolve(type: string): string | undefined {
     return undefined;
   }
 
-  const relativePath = Path.relative(filePath, location);
-  return `import ${type} from './${relativePath.replace('.d.ts', '')}'`;
+  let relativePath = Path.relative(filePath, location);
+  if (relativePath[0] != '.') {
+    relativePath = './' + relativePath;
+  }
+  return `import ${type} from '${relativePath.replace('.d.ts', '')}'`;
 }
 
 const rl = ReadLine.createInterface({
